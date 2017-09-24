@@ -1,0 +1,90 @@
+---
+title: "Homework 2 Code"
+author: "Dani Antos"
+date: "September 24, 2017"
+output: html_document
+---
+
+#Question 1
+lambda=15 (mean)
+To set up the distribution, does it matter what "n" is? Should I just pick a big enough number to get a good distribution?
+
+```{r echo=TRUE}
+set.seed(1)
+x <- rpois(100000, 15)
+plot(x, dpois(x, 15, log=FALSE))
+```
+
+
+Okay so probability that she'll hear more than 8 calls...
+
+ppois(x>=8, 15, lower.tail=TRUE, log.p=FALSE)
+
+
+```{r echo=TRUE}
+1-ppois(q=8, lambda=15)
+```
+
+
+#Question 2
+Probability of hearing no calls
+Before, I tried: p(x)= lambda^x*exp(-lambda)/x! but I got a number that was x10^-7
+
+What if I do ppois again?
+```{r echo=TRUE}
+ppois(0, 15, lower.tail=TRUE, log.p=FALSE)
+```
+
+Update I got the same number as doing p(0) so maybe that's the right answer.
+
+```{r echo=TRUE}
+dpois(x=0,lambda=15)
+```
+
+#Question 3
+exactly 3 calls in a session, x=3, I know I can use that formula.
+```{r echo=TRUE}
+p3 <- 15^3*exp(-15)/factorial(3)
+p3
+```
+
+
+```{r echo=TRUE}
+dpois(x=3,lambda=15) #output is the same as the above formula
+```
+
+#Question 4
+plot values in the range 0:30
+
+I'm going to just do a barplot like the book does instead of a scatter plot, because the histogram for the last question is also going to be a bar graph.
+
+```{r echo=TRUE}
+barplot(dpois(x=0:30,lambda=15),ylim=c(0,0.25), space=0,names.arg=0:30, ylab="Pr(X=x)", xlab="x")
+```
+
+I didn't get any warnings so I'm going with this.
+
+#Question 5
+simulate 104 results (2 years worth of work)
+so would n=104 or 1? Because you want one result per sample (not multiple numbers from the vector per sampling?)
+
+Would the formula/code be the same for different types of distributions?
+```{r echo=TRUE}
+set <- NULL
+n<-1
+for (i in 1:104){
+set[i] <- mean(sample(x, n, replace=TRUE))
+}
+quantile(set)
+quantile(set, c(0.025, 0.975))
+```
+
+I'm not sure if the quantiles are necessary to answer this particular question. 
+
+#Question 6
+creating a histogram of the simulated results
+```{r  echo=TRUE}
+hist(set, xlim=c(0,30))
+```
+
+The mean is the same for both plots because it was set to 15 in both cases. However, because the first plot (from Question 4) was just a set of random values, it looks more like a normal distribution/bell curve than the simulated data. Also, if a line was plotted over the simulated data, the right tail looks longer than the left tail, which is not the case in the first plot. Considering the difference in number of observations, it makes sense that the first plot has more of a bell curve shape compared to the simulated data.
