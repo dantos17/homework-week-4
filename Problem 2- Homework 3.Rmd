@@ -97,3 +97,7 @@ c
 ```
 
 #Question 3
+
+
+#Question 5
+sample(d, 30, replace=FALSE, prob=FALSE)
