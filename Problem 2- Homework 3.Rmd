@@ -1,0 +1,99 @@
+---
+title: "Homework Problem 2"
+author: "Dani Antos"
+date: "September 24, 2017"
+output: html_document
+---
+Loading the zombie.csv file from Prof Schmitt's GitHub
+```{r echo=TRUE}
+library(curl)
+f <- f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN597_Fall17/zombies.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(d)
+```
+
+#Question 1
+Calculating population means and standard deviations is not the same as the sample mean and sd. This was part of Module 7. Wait, maybe the mean would be the same? It's just the variance and SD that are different?
+
+Height:
+```{r echo=TRUE}
+mean(d$height)
+h <- sum((d$height-mean(d$height))^2)/length(d$height)
+sqrt(h)
+```
+
+Weight:
+```{r echo=TRUE}
+mean(d$weight)
+w <- sum((d$weight-mean(d$weight))^2)/length(d$weight)
+sqrt(w)
+```
+
+Age:
+```{r echo=TRUE}
+mean(d$age)
+a <- sum((d$age-mean(d$age))^2)/length(d$age)
+sqrt(a)
+```
+
+Number of zombied killed:
+```{r}
+mean(d$zombies_killed)
+z <- sum((d$zombies_killed-mean(d$zombies_killed))^2)/length(d$zombies_killed)
+sqrt(z)
+```
+
+Years of education:
+```{r echo= TRUE}
+mean(d$years_of_education)
+e <- sum((d$years_of_education-mean(d$years_of_education))^2)/length(d$years_of_education)
+sqrt(e)
+```
+
+#Question 2
+Height:
+```{r echo=TRUE}
+library(ggplot2)
+p <- ggplot(data=d, aes(x= gender, y= height))
+p <- p +geom_boxplot()
+p <- p + xlab("Gender") + ylab("Height")
+p
+```
+
+Weight:
+```{r echo=TRUE}
+library(ggplot2)
+m <- ggplot(data=d, aes(x= gender, y= weight))
+m <- m +geom_boxplot()
+m <- m + xlab("Gender") + ylab("Weight")
+m
+```
+
+Age:
+```{r echo=TRUE}
+library(ggplot2)
+q <- ggplot(data=d, aes(x= gender, y= age))
+q <- q +geom_boxplot()
+q <- q +xlab("Gender") + ylab("Age")
+q
+```
+
+Number of zombies killed:
+```{r echo=TRUE}
+library(ggplot2)
+b <- ggplot(data=d, aes(x= gender, y= zombies_killed))
+b <- b +geom_boxplot()
+b <- b + xlab("Gender") + ylab("Number of Zombies Killed")
+b
+```
+
+Years of education:
+```{r echo=TRUE}
+library(ggplot2)
+c <- ggplot(data=d, aes(x= gender, y= years_of_education))
+c <- c +geom_boxplot()
+c <- c + xlab("Gender") + ylab("Years of Education")
+c
+```
+
+#Question 3
