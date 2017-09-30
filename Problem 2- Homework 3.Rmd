@@ -97,7 +97,293 @@ c
 ```
 
 #Question 3
+```{r}
+library(ggplot2)
+p <- ggplot(data=d, aes(x= age, y= height))
+p <- p +xlab("Age") + ylab("Height")
+p <- p + geom_point()
+p
+library(ggplot2)
+q <- ggplot(data=d, aes(x= age, y= weight))
+q <- q +xlab("Age") + ylab("Weight")
+q <- q + geom_point()
+q
+```
 
+Both height and weight seem to have a positive correlation with age. Height seems to have a stronger correlation with age than weight does just by looking at the two graphs.
+
+#Question 4
+Age:
+```{r}
+hist(d$age, breaks= seq(0, 40, 1), probability=TRUE, main="Histogram of Age", xlab="Age")
+```
+
+That gives me the histogram for the ages of the zombie survivors. 
+```{r}
+qqnorm(d$age, main= "Normal QQ Plot Age")
+qqline(d$age, col="gray")
+```
+
+Age seems to follow a normal distribution.
+
+Height:
+```{r}
+hist(d$height, breaks= seq(50, 90, 1), probability=TRUE, main="Histogram of Height", xlab="Height")
+```
+
+To be honest, I wasn't sure what to set the "by" argument as because each height is rounded to four decimal places but that histogram looked like a hot mess.
+```{r}
+qqnorm(d$age, main= "Normal QQ Plot Height")
+qqline(d$age, col="gray")
+```
+
+Height also appears to follow a normal distribution.
+
+Weight:
+```{r}
+hist(d$weight, breaks= seq(50, 250, 1), probability=TRUE, main="Histogram of Weight", xlab="Weight")
+```
+```{r}
+qqnorm(d$weight, main="Normal QQ Plot Weight")
+qqline(d$weight, col="gray")
+```
+
+Weight appears to follow a normal distribution. (Am I doing this right?)
+
+Number of Zombies Killed:
+```{r}
+hist(d$zombies_killed, breaks= seq(0, 20, 1), probability = TRUE, main= "Histogram of Zombies Killed", xlab="Number of Zombies Killed")
+```
+
+This looks like a Poisson distribution, but I need to confirm that.
+```{r}
+p <- ppoints(length(d$zombies_killed))
+head(p)
+tail(p) #step one from module 8
+theoretical_q<- qpois(ppoints(length(d$zombies_killed)), mean(d$zombies_killed)) #step 2 to get theoretical values
+observed_q <- quantile(d$zombies_killed, ppoints(d$zombies_killed)) #step 3 to get quantiles of observed data
+plot(theoretical_q, observed_q, main="Poisson QQ Plot Number of Zombies Killed", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+```
+
+Well that looks like a relatively straight line, but it looks much different than the other Q-Q plots, but I'd still say the Number of Zombies Killed follows a Poisson distribution, which I think also makes sense because we're counting. 
+
+Years of Education:
+```{r}
+hist(d$years_of_education, breaks= seq(0, 10, 1), probability=TRUE, main= "Histogram of Years of Education", xlab="Years of Education")
+```
+
+Okay again I'm thinking Poisson, which would make sense again because we're counting.
+```{r}
+p <- ppoints(length(d$years_of_education))
+head(p)
+tail(p)
+theoretical_q<- qpois(ppoints(length(d$years_of_education)), mean(d$years_of_education))
+observed_q <- quantile(d$years_of_education, ppoints(d$years_of_education))
+plot(theoretical_q, observed_q, main="Poisson QQ Plot Years of Education", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+```
+
+Again, it looks like a straight line but there are was fewer points than on the Q-Q plots for the normal distributions. But it looks like Years of Education follows a Poisson distribution.
 
 #Question 5
-sample(d, 30, replace=FALSE, prob=FALSE)
+```{r}
+library(dplyr)
+subset_1 <- sample_n(d, 30, replace=FALSE, weight=NULL, .env=NULL)
+subset_1
+```
+So now that I'm working with a sample (rather than the whole population), I think that I can use the built in functions for mean and standard deviation. (I originally did the code in the order that the homework listed them, but rearranged them by variable because I thought it looked better) sample size=30
+
+Age:
+```{r}
+m <- mean(subset_1$age)
+m
+s <- sd(subset_1$age)
+s
+error <- sd(subset_1$age)/sqrt(30)
+error
+#age has a normal distribution so I can use qnorm()
+upper <- qnorm(0.975, mean=m, sd=s)
+lower <- qnorm(0.025, mean=m, sd=s)
+ci <- c(lower, upper)
+ci
+```
+
+Height:
+```{r}
+m <- mean(subset_1$height)
+m
+s <- sd(subset_1$height)
+s
+error <- sd(subset_1$height)/sqrt(30)
+error
+#height has a normal distribution
+upper <- qnorm(0.975, mean=m, sd=s)
+lower <- qnorm(0.025, mean=m, sd=s)
+ci <- c(lower, upper)
+ci
+
+```
+
+Weight:
+```{r}
+m <-mean(subset_1$weight)
+m
+s <- sd(subset_1$weight)
+s
+error <- sd(subset_1$weight)/sqrt(30)
+error
+#weight has a normal distribution
+upper <- qnorm(0.975, mean=m, sd=s)
+lower <- qnorm(0.025, mean=m, sd=s)
+ci <- c(lower, upper)
+ci
+```
+
+Number of Zombies Killed: (I know that this is going to be different from the variables above because it follows a different distribution)
+```{r}
+m <- mean(subset_1$zombies_killed)
+m
+s <- sd(subset_1$zombies_killed)
+s
+error <- sd(subset_1$zombies_killed)/sqrt(30)
+error
+upper <- qpois(0.975, m)
+lower <- qpois(0.025, m)
+ci <- c(lower, upper)
+ci #lower is 0, which makes sense to me because you can't kill negative zombies
+```
+
+Years of Education: (also Poisson distribution)
+```{r}
+m <- mean(subset_1$years_of_education)
+m
+s <- sd(subset_1$years_of_education)
+error <- sd(subset_1$years_of_education)/sqrt(30)
+error
+upper <- qpois(0.975, m)
+lower <- qpois(0.025, m)
+ci <- c(lower, upper)
+ci
+```
+
+#Question 6
+Okay not gonna lie, I'm struggling a little bit conceptually here but I took notes on how you verbally explained this in class. So "subset of n" would be 30 because I want each subset to contain 30 rows, but I think I have to do each variable separately because r would try to take the mean of multiple variables and/or non-integer values. Then "x" would be 99 because we want to take subsets 99 times (for a total of 100 subsets including the one I created in **Question 5**).
+
+So this is the code from Module 7:
+set <- NULL 
+n <- 15
+for (i in 1:10000) {
+    set[i] <- mean(sample(x, n, replace = TRUE)) }
+
+and to my understanding, n=30, instead of 1:10000 it would be 1:99, and x would just be whatever variable I'm working with.
+    
+
+Age:    
+```{r}
+set <- NULL
+n <- 30
+for (i in 1:99) {
+    set[i] <- mean(sample(d$age, n, replace = TRUE))
+}
+set
+```
+Okay, now to my understanding, this function's output will be 99 means of 30 ages each. I'm still a little unsure as to how to integrate this data with the last (100th) mean that I already computed. Also, wording is a bit confusing here, do you want me to take the mean of the 100 means? I guess that would make the most sense..
+```{r}
+v <- c(set, subset_1$age)
+mean(v)
+sd(v)
+#sd is larger than error from question 5 which makes me think I did something wrong, but this sd is much smaller than the sd from number 5
+hist(v, breaks= seq(10, 30, 1), probability=TRUE, main= "Histogram of Age Sampling Distribution", xlab="Age")
+```
+
+I guess it still looks normally distributed, the tails are longer than the previous histogram. I was expecting it to look more like a standard bell curve than the first histogram but now it makes sense for 19-21 to have the highest peaks, because any random subset of d for age would  be really really unlikely to have a mean as low as 15 or as high as 24.
+
+Now I have to repeat for each variable and I'm finding it highly doubtful this is the easiest way to accomplish this task.
+
+Height:
+```{r}
+set <- NULL
+n <- 30
+for (i in 1:99) {
+    set[i] <- mean(sample(d$height, n, replace = TRUE))
+}
+set
+v <- c(set, subset_1$height)
+mean(v)
+sd(v)
+#again, sd is greater than the error calculated in question 5, but it is less than the sd calculated in question 5
+hist(v, breaks= seq(50, 80, 1), probability=TRUE, main= "Histogram of Height Sampling Distribution", xlab="Height")
+```
+
+The histogram looks relatively normal. The right tail is definitely longer/larger than the left tail but I guess that could just mean that there are more shorter people than taller, so we'd be more likely to get a mean <70 (for example), but a mean of 70 or above would still be possible depending on the particular subset chosen. If that makes sense. It makes sense in my head.
+
+Weight:
+```{r}
+set <- NULL
+n <- 30
+for (i in 1:99) {
+    set[i] <- mean(sample(d$weight, n, replace = TRUE))
+}
+set
+v <- c(set, subset_1$weight)
+mean(v)
+sd(v)
+#sd here is greater than the error calculated in question 5, but less than the sd from question 5
+hist(v, breaks= seq(70, 200, 1), probability=TRUE, main= "Histogram of Weight Sampling Distribution", xlab="Weight")
+```
+
+If you ignore the outliar at ~181, it looks like a pretty good bell curve. Which we expect because the other histogram also showed a normal distribution.
+
+Number of Zombies Killed:
+```{r}
+set <- NULL
+n <- 30
+for (i in 1:99) {
+    set[i] <- mean(sample(d$zombies_killed, n, replace = TRUE))
+}
+set
+v <- c(set, subset_1$zombies_killed)
+mean(v)
+sd(v)
+#sd here is greater than the error calculated in question 5, but less than the sd from question 5, also I don't really understand why we're comparing sd to se because they aren't the same
+hist(v, breaks= seq(0, 10, 1), probability=TRUE, main= "Histogram of Number of Zombies Killed Sampling Distribution", xlab= "Number of Zombies Killed")
+```
+
+Wow this doesn't look like much to me, because I thought Poisson distribution would have a greater number of counts for 0 and 1, but maybe I can check this using a Q-Q plot?
+```{r}
+p <- ppoints(length(v))
+head(p)
+tail(p)
+theoretical_q<- qpois(ppoints(length(v)), mean(v))
+observed_q <- quantile(v, ppoints(v)) 
+plot(theoretical_q, observed_q, main="Poisson QQ Plot Number of Zombies Killed Sampling Distribution", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+```
+
+I guess that looks straight-ish? Maybe the non-straightness is due to the peaks at 4-6 zombies killed (as seen in the histogram) instead of lower numbers, so it's not like the most perfect Poisson distribution ever.
+
+Years of Education:
+```{r}
+set <- NULL
+n <- 30
+for (i in 1:99) {
+    set[i] <- mean(sample(d$years_of_education, n, replace = TRUE))
+}
+set
+v <- c(set, subset_1$years_of_education)
+mean(v)
+sd(v)
+#sd is greater than error from question 5 but less than the sd from question 5, as expected
+hist(v, breaks= seq(0, 8, 1), probability=TRUE, main= "Histogram of Years of Education Sampling Distribution", xlab= "Years of Education")
+```
+
+Like "zombies killed," years of education previously had a Poisson distribution. It still looks like a Poisson, but again, like the last histogram, the highest peaks aren't exactl where I would've expected them given an ideal Poisson distribution.
+
+```{r}
+p <- ppoints(length(v))
+head(p)
+tail(p)
+theoretical_q<- qpois(ppoints(length(v)), mean(v))
+observed_q <- quantile(v, ppoints(v))
+plot(theoretical_q, observed_q, main="Poisson QQ Plot Years of Education Sampling Distribution", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+```
+
+I mean that looks pretty okay, again, I'm thinking that it's not completely straight because of where the highest peaks lie on the histogram. That's honestly just a guess though.
