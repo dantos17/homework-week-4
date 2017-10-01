@@ -151,6 +151,8 @@ qqline(d$weight, col="gray")
 Weight appears to follow a normal distribution. (Am I doing this right?)
 
 Number of Zombies Killed:
+
+**NOTE:** Instructions for this portion made it unclear to me whether we are supposed to be proving that it is a certain (in this case Poisson) distribution or just proving that it isn't following a normal distribution. Replacing "qpois" with "qnorm" would prove the latter.
 ```{r}
 hist(d$zombies_killed, breaks= seq(0, 20, 1), probability = TRUE, main= "Histogram of Zombies Killed", xlab="Number of Zombies Killed")
 ```
@@ -348,7 +350,7 @@ sd(v)
 hist(v, breaks= seq(0, 10, 1), probability=TRUE, main= "Histogram of Number of Zombies Killed Sampling Distribution", xlab= "Number of Zombies Killed")
 ```
 
-Wow this doesn't look like much to me, because I thought Poisson distribution would have a greater number of counts for 0 and 1, but maybe I can check this using a Q-Q plot?
+Looks more like a normal distribution than a Poisson distribution.
 ```{r}
 p <- ppoints(length(v))
 head(p)
@@ -358,7 +360,7 @@ observed_q <- quantile(v, ppoints(v))
 plot(theoretical_q, observed_q, main="Poisson QQ Plot Number of Zombies Killed Sampling Distribution", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
 ```
 
-I guess that looks straight-ish? Maybe the non-straightness is due to the peaks at 4-6 zombies killed (as seen in the histogram) instead of lower numbers, so it's not like the most perfect Poisson distribution ever.
+I guess that looks straight-ish? Maybe the non-straightness is due to the peaks at 4-6 zombies killed (as seen in the histogram) instead of lower numbers, so the histogram ends up looking like a normal distribution.
 
 Years of Education:
 ```{r}
@@ -375,7 +377,7 @@ sd(v)
 hist(v, breaks= seq(0, 8, 1), probability=TRUE, main= "Histogram of Years of Education Sampling Distribution", xlab= "Years of Education")
 ```
 
-Like "zombies killed," years of education previously had a Poisson distribution. It still looks like a Poisson, but again, like the last histogram, the highest peaks aren't exactl where I would've expected them given an ideal Poisson distribution.
+Like "zombies killed," years of education previously had a Poisson distribution. Now it looks more like a normal distribution because the highest peaks aren't where I would expect them to be for a Poisson.
 
 ```{r}
 p <- ppoints(length(v))
@@ -386,4 +388,4 @@ observed_q <- quantile(v, ppoints(v))
 plot(theoretical_q, observed_q, main="Poisson QQ Plot Years of Education Sampling Distribution", xlab="Theoretical Quantiles", ylab="Sample Quantiles")
 ```
 
-I mean that looks pretty okay, again, I'm thinking that it's not completely straight because of where the highest peaks lie on the histogram. That's honestly just a guess though.
+It doesn't look very straight, so I'm thinking that it's more of a normal distribution. 
