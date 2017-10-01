@@ -282,7 +282,7 @@ Age:
 set <- NULL
 n <- 30
 for (i in 1:99) {
-    set[i] <- mean(sample(d$age, n, replace = TRUE))
+    set[i] <- mean(sample(d$age, n, replace = FALSE))
 }
 set
 ```
@@ -304,7 +304,7 @@ Height:
 set <- NULL
 n <- 30
 for (i in 1:99) {
-    set[i] <- mean(sample(d$height, n, replace = TRUE))
+    set[i] <- mean(sample(d$height, n, replace = FALSE))
 }
 set
 v <- c(set, subset_1$height)
@@ -321,7 +321,7 @@ Weight:
 set <- NULL
 n <- 30
 for (i in 1:99) {
-    set[i] <- mean(sample(d$weight, n, replace = TRUE))
+    set[i] <- mean(sample(d$weight, n, replace = FALSE))
 }
 set
 v <- c(set, subset_1$weight)
@@ -338,7 +338,7 @@ Number of Zombies Killed:
 set <- NULL
 n <- 30
 for (i in 1:99) {
-    set[i] <- mean(sample(d$zombies_killed, n, replace = TRUE))
+    set[i] <- mean(sample(d$zombies_killed, n, replace =FALSE))
 }
 set
 v <- c(set, subset_1$zombies_killed)
@@ -365,7 +365,7 @@ Years of Education:
 set <- NULL
 n <- 30
 for (i in 1:99) {
-    set[i] <- mean(sample(d$years_of_education, n, replace = TRUE))
+    set[i] <- mean(sample(d$years_of_education, n, replace = FALSE))
 }
 set
 v <- c(set, subset_1$years_of_education)
